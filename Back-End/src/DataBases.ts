@@ -4,5 +4,5 @@ export const pool = mysql.createConnection({
     host: 'localhost',
     user:'root',
     password:'Neer5114r',
-    database:'mydb'
+    database:'myDB'
 }).promise();

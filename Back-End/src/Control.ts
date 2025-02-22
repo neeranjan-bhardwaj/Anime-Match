@@ -1,25 +1,55 @@
-import type {Response,Request } from "express";
+import type {Response,Request} from "express";
 import { pool } from "./DataBases";
 
 export async function Get(req:Request,res:Response){
-    const result=await pool.query('SELECT * FROM anime');
-    res.json({
-        data: result[0],
-    });
+    try{
+        const [row]=await pool.query('SELECT * FROM anime');
+        res.json({
+            message: row
+        })
+    }catch(e){
+        console.log(e);
+        res.json({
+            message: "Internal Server Error"
+        })
+    }
 }
 
 export async function post(req:Request,res:Response){
-    
+    try{
+        const Body=req.body
+        if(!(Body.id&&Body.name&&Body.rating)) throw new Error("Error can not find id or name or rating");
+        const [row]=await pool.query('INSERT INTO anime (id,name,rating) VALUES (?,?,?)',[Body.id,Body.name,Body.rating]);
+        console.log(row);
+        res.json({
+            message: "Add Sussesfully"
+        })
+    }catch(e){
+        console.log(e);
+        res.json({
+            message: "Error"
+        })
+    }
 }
 
 export async function patch(req:Request,res:Response){
     res.json({
-        message: "Get"
+        message: "Patch"
     })
 }
 
 export async function Delete(req:Request,res:Response){
-    res.json({
-        message: "Get"
-    })
+    try{
+        const Body=req.body
+        if(!(Body.id||Body.name))throw new Error("Error can not find id or name");
+        const [row]=await pool.query('DELETE FROM anime WHERE id=? OR name=?',[Body.id,Body.name]);
+        res.json({
+            message: "Delete Sussesfully"
+        })
+    }catch(e){
+        console.log(e);
+        res.json({
+            message: "Error"
+        })
+    }
 }
