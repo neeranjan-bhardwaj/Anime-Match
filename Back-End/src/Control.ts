@@ -19,7 +19,8 @@ export async function post(req:Request,res:Response){
     try{
         const Body=req.body
         if(!(Body.id&&Body.name&&Body.rating)) throw new Error("Error can not find id or name or rating");
-        const [row]=await pool.query('INSERT INTO anime (id,name,rating) VALUES (?,?,?)',[Body.id,Body.name,Body.rating]);
+        const query=`INSERT INTO anime (id,name,rating) VALUES (?,?,?)`;
+        const row=await pool.query(query,[Body.id,Body.name,Body.rating]);
         console.log(row);
         res.json({
             message: "Add Sussesfully"
@@ -42,7 +43,8 @@ export async function Delete(req:Request,res:Response){
     try{
         const Body=req.body
         if(!(Body.id||Body.name))throw new Error("Error can not find id or name");
-        const [row]=await pool.query('DELETE FROM anime WHERE id=? OR name=?',[Body.id,Body.name]);
+        const query=`DELETE FROM anime WHERE id=? OR name=?`;
+        const [row]=await pool.query(query,[Body.id,Body.name]);
         res.json({
             message: "Delete Sussesfully"
         })
